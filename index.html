@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peer Exchange - Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: white;
+        }
+        
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #4a90c2;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            display: none;
+        }
+        
+        .header.show {
+            display: block;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .step {
+            display: none;
+        }
+        
+        .step.active {
+            display: block;
+        }
+        
+        .intro h2 {
+            color: #4a90c2;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .problem-box {
+            background: white;
+            border: 2px solid #e8f4fd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .problem-box:nth-child(1) {
+            grid-column: 1 / 3;
+        }
+        
+        .problem-box:nth-child(2) {
+            grid-column: 3 / 5;
+        }
+        
+        .problem-box:nth-child(3) {
+            grid-column: 5 / 7;
+        }
+        
+        .problem-box:nth-child(4) {
+            grid-column: 2 / 4;
+            grid-row: 2;
+        }
+        
+        .problem-box:nth-child(5) {
+            grid-column: 4 / 6;
+            grid-row: 2;
+        }
+        
+        .problem-number {
+            background: #4a90c2;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: bold;
+        }
+        
+        .problem-title {
+            color: #4a90c2;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .solution-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+            border-top: 2px solid #e8f4fd;
+            padding-top: 15px;
+        }
+        
+        .navigation {
+            background: #f8f9fb;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ddd;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background: #4a90c2;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+        }
+        
+        .dot.active {
+            background: #4a90c2;
+        }
+        
+        .problem-solution-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .problem-box-large {
+            background: linear-gradient(135deg, #4a90c2, #357abd);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(74, 144, 194, 0.3);
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .solution-box-large {
+            background: linear-gradient(135deg, #7dd87d, #6bc26b);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(125, 216, 125, 0.3);
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .arrow {
+            font-size: 36px;
+            color: #4a90c2;
+            font-weight: bold;
+        }
+
+        .demo-section {
+            background: linear-gradient(135deg, #c7ddf5 0%, #a6c8e8 100%);
+            color: #2c5282;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .demo-interface {
+            background: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .timer {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4a90c2;
+            margin-bottom: 10px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #007bff;
+        }
+
+        .feature-card.blue {
+            border-left-color: #007bff;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #007bff;
+        }
+
+        .feature-title.blue {
+            color: #007bff;
+        }
+
+        .simple-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .simple-list li {
+            padding: 6px 0;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .grade-row.dotted-placeholder {
+            border-bottom: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+        
+        .dotted-text {
+            border-bottom: 2px dotted #ccc;
+            flex-grow: 1;
+            height: 1px;
+            margin-right: 10px;
+        }
+        
+        .light-percent {
+            color: #ccc;
+            font-weight: normal;
+        }
+
+        .grade-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .grade-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .summary-grid .summary-item:nth-child(4) {
+            grid-column: 2 / 3;
+        }
+
+        .summary-grid .summary-item:nth-child(5) {
+            grid-column: 3 / 4;
+        }
+
+        .summary-item {
+            background: white;
+            border: 2px solid #e8f4fd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .summary-item h4 {
+            color: #4a90c2;
+            margin-bottom: 10px;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #357abd 0%, #2c5aa0 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .cta-btn {
+            background: white;
+            color: #4a90c2;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .grading-interface {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .grading-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .unique-advantage {
+            background: #f0f4f8;
+            border: 1px solid #e1e8ed;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="header">
+            <h1>Peer Exchange</h1>
+            <p>A patented system to address current teaching headaches</p>
+        </div>
+        
+        <div class="navigation">
+            <button class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" disabled>← Previous</button>
+            <div class="dots">
+                <div class="dot active" onclick="goToPage(0)"></div>
+                <div class="dot" onclick="goToPage(1)"></div>
+                <div class="dot" onclick="goToPage(2)"></div>
+                <div class="dot" onclick="goToPage(3)"></div>
+                <div class="dot" onclick="goToPage(4)"></div>
+                <div class="dot" onclick="goToPage(5)"></div>
+            </div>
+            <button class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 6;
+        
+        function updateDisplay() {
+            // Hide all steps
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Show current step
+            document.querySelectorAll('.step')[currentStep].classList.add('active');
+            
+            // Show/hide header banner (only on pages 1 and 6)
+            const header = document.querySelector('.header');
+            if (currentStep === 0 || currentStep === 5) {
+                header.classList.add('show');
+            } else {
+                header.classList.remove('show');
+            }
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentStep === 0;
+            document.getElementById('nextBtn').disabled = currentStep === totalSteps - 1;
+            
+            if (currentStep === totalSteps - 1) {
+                document.getElementById('nextBtn').textContent = 'Restart →';
+                document.getElementById('nextBtn').disabled = false;
+            } else {
+                document.getElementById('nextBtn').textContent = 'Next →';
+            }
+            
+            // Update step indicators
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentStep);
+            });
+        }
+        
+        function changeStep(direction) {
+            if (currentStep === totalSteps - 1 && direction === 1) {
+                // Restart demo
+                currentStep = 0;
+            } else {
+                currentStep += direction;
+                if (currentStep < 0) currentStep = 0;
+                if (currentStep >= totalSteps) currentStep = totalSteps - 1;
+            }
+            updateDisplay();
+        }
+        
+        function goToPage(page) {
+            currentStep = page;
+            updateDisplay();
+        }
+        
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>
+        
+        <div class="content">
+            <!-- Page 1 -->
+            <div class="step active">
+                <div class="intro">
+                    <h2>Five Problems Instructors Face → Our Solutions</h2>
+                    <p style="text-align: center; color: #666; margin-bottom: 40px;">
+                        Peer Exchange transforms teaching frustrations into streamlined solutions that save time and improve learning.
+                    </p>
+                </div>
+                
+                <div class="problem-grid">
+                    <div class="problem-box">
+                        <div class="problem-number">1</div>
+                        <div class="problem-title">Students cheat with unauthorized GenAI</div>
+                        <div class="solution-text">
+                            <strong>Solution:</strong> An immediate oral response that's timed, transcribed, and graded. Finally trust student work again.
+                        </div>
+                    </div>
+                    
+                    <div class="problem-box">
+                        <div class="problem-number">2</div>
+                        <div class="problem-title">Grading and feedback take too much time</div>
+                        <div class="solution-text">
+                            <strong>Solution:</strong> Both are automated- no instructor time needed
+                        </div>
+                    </div>
+                    
+                    <div class="problem-box">
+                        <div class="problem-number">3</div>
+                        <div class="problem-title">I want to use peer review, but it never works well</div>
+                        <div class="solution-text">
+                            <strong>Solution:</strong> Patented, fair evaluation, works with uneven participation
+                        </div>
+                    </div>
+                    
+                    <div class="problem-box">
+                        <div class="problem-number">4</div>
+                        <div class="problem-title">Students need GenAI skills for careers, but how can my course prepare them?</div>
+                        <div class="solution-text">
+                            <strong>Solution:</strong> Student vs. ChatGPT skills rivalry (built-in and pre-prompted)
+                        </div>
+                    </div>
+                    
+                    <div class="problem-box">
+                        <div class="problem-number">5</div>
+                        <div class="problem-title">If I need to re-work assignments, I don't have time</div>
+                        <div class="solution-text">
+                            <strong>Solution:</strong> Use existing assignments and accept defaults
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page 2: AI Cheating Solution -->
+            <div class="step">
+                <div class="problem-solution-container">
+                    <div class="problem-box-large">
+                        <h3>Students cheat with unauthorized use of GenAI tools</h3>
+                        <p>Are my students learning? Written work leaves me unsure if I'm grading what they know, or what AI told them.</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="solution-box-large">
+                        <h3>Immediate Oral Response</h3>
+                        <p>Capture unscripted oral response - no time for outside help. Responses are recorded, ChatGPT offers optional evaluation and grades. Finally, trust student work again!</p>
+                    </div>
+                </div>
+
+                <div class="demo-section">
+                    <h3>Assessment Focused on Understanding of Course Concepts</h3>
+                    <div class="demo-interface">
+                        <div class="timer">⏱️ 2:45</div>
+                        <p><strong>Student sees upfront message:</strong><br>"No public speaking stress - you're evaluated on course understanding, <strong>not</strong> how you present your thoughts."</p>
+                        <div style="background: rgba(255,255,255,0.3); padding: 15px; border-radius: 4px; margin-top: 15px;">
+                            <small>🎤 Recording in progress<br>Built-in platform recording - no setup required</small>
+                        </div>
+                    </div>
+                    <p><strong>Student responds to randomized question: e.g., "Explain how today's concepts apply to the scenario..."</strong></p>
+                    <p><strong>Does the student understand course concepts? You set the criteria. If you choose, ChatGPT evaluates the response.</strong></p>
+                </div>
+            </div>
+            
+            <!-- Page 3: Grading & Feedback - CORRECTED -->
+            <div class="step">
+                <div class="problem-solution-container">
+                    <div class="problem-box-large">
+                        <h3>Grading and feedback take too much time</h3>
+                        <p>"I dread these tasks — they're always hanging over me."</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="solution-box-large">
+                        <h3>Automated Grading & Feedback</h3>
+                        <p>Both are automated — available instantly and according to your criteria. No manual grading required.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-grid">
+                    <div class="feature-card blue">
+                        <div class="feature-title blue">Automated Grading Takes 5 Minutes</div>
+                        <div class="grading-interface">
+                            <div class="grading-header">Accept Defaults or Customize:</div>
+                            <div class="grade-row">
+                                <span>Participation Stage 1</span><span>25%</span>
+                            </div>
+                            <div class="grade-row dotted-placeholder">
+                                <span class="dotted-text"></span><span class="light-percent">%</span>
+                            </div>
+                            <div class="grade-row dotted-placeholder">
+                                <span class="dotted-text"></span><span class="light-percent">%</span>
+                            </div>
+                            <div class="grade-row">
+                                <span><strong>Total:</strong></span><span><strong>100%</strong></span>
+                            </div>
+                        </div>
+                        
+                        <ul class="simple-list">
+                            <li>Students never see scores assigned by peers</li>
+                            <li>Student scores are normalized to adjust for scoring differences</li>
+                            <li>Compatible with all major grading systems (e.g., numeric, letter, curved)</li>
+                            <li>Grade ranges are fully customizable (e.g., A: 93-100%, B: 85-92%)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-title">Instant Feedback in Seconds</div>
+                        <p><strong>Peer Feedback + Optional GenAI Feedback</strong></p>
+                        
+                        <ul class="simple-list">
+                            <li>Peer and optional GenAI feedback are customized to your learning goals</li>
+                            <li>Share GenAI feedback with students, or keep for your own grading assistance</li>
+                        </ul>
+                        
+                        <div class="unique-advantage">
+                            <strong>Unique advantage:</strong> No prompting or AI setup required. The questions you write for students become the basis of GenAI's analysis.
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px; padding: 20px; background: #e8f4fd; border-radius: 10px;">
+                    <strong>Result:</strong> Every student automatically receives a grade and personalized feedback based on your preferences. No manual grading required.
+                </div>
+            </div>
+            
+            <!-- Page 4: Peer Review System -->
+            <div class="step">
+                <div class="problem-solution-container">
+                    <div class="problem-box-large">
+                        <h3>I want to use peer review, but it never works well</h3>
+                        <p>I know research supports peer learning, and most of my students have valuable insights to share - but when I've tried peer review, I face problems.</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="solution-box-large">
+                        <h3>Patented Fair System</h3>
+                        <p>We anticipate those problems: our patented approach to peer review ensures fair grading, and our approach assumes uneven participation.</p>
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fb; border-radius: 12px; padding: 30px; margin: 30px 0;">
+                    <h3 style="color: #4a90c2; margin-bottom: 20px;">Built by a teacher who needed peer review to work</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <div style="background: white; border: 2px solid #e1e5e9; border-radius: 8px; padding: 25px; text-align: center;">
+                            <div style="width: 60px; height: 80px; background: #f8f9fb; border: 2px solid #4a90c2; border-radius: 4px; margin: 0 auto 15px; position: relative;">
+                                <div style="background: #4a90c2; color: white; text-align: center; padding: 3px; font-size: 10px; font-weight: bold;">PATENT</div>
+                                <div style="padding: 5px;">
+                                    <div style="height: 2px; background: #ddd; margin: 3px 0;"></div>
+                                    <div style="height: 2px; background: #ddd; margin: 3px 0;"></div>
+                                    <div style="height: 2px; background: #ddd; margin: 3px 0;"></div>
+                                </div>
+                            </div>
+                            <p><strong>Our patented system ensures fair evaluation — acknowledging that peer grading standards may vary.</strong></p>
+                        </div>
+
+                        <div style="background: white; border: 2px solid #e1e5e9; border-radius: 8px; padding: 25px; text-align: center;">
+                            <div style="width: 100px; height: 60px; margin: 0 auto 15px; position: relative; padding: 10px;">
+                                <div style="position: relative; width: 100%; height: 4px; background: #4a90c2; border-radius: 2px; margin-bottom: 12px;">
+                                    <span style="position: absolute; right: -8px; top: -6px; background: #7dd87d; color: white; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;">✓</span>
+                                </div>
+                                <div style="position: relative; width: 80%; height: 2px; background: transparent; border-top: 2px dotted #7dd87d; border-radius: 1px; margin-left: 20%;">
+                                    <span style="position: absolute; right: -8px; top: -7px; background: #7dd87d; color: white; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;">✓</span>
+                                </div>
+                            </div>
+                            <p><strong>Less motivated students follow a parallel path. The result: uneven participation doesn't disadvantage conscientious students.</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page 5: GenAI Career Prep -->
+            <div class="step">
+                <div class="problem-solution-container">
+                    <div class="problem-box-large">
+                        <h3>GenAI Career Preparation</h3>
+                        <p>Students need GenAI skills for careers, but how can my course prepare them?</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="solution-box-large">
+                        <h3>Skills Rivalry with ChatGPT</h3>
+                        <p>Student vs. ChatGPT skills rivalry (pre-prompted and built-in)</p>
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fb; border-radius: 12px; padding: 30px; margin: 30px 0;">
+                    <h3 style="color: #4a90c2; margin-bottom: 20px;">🤖 Turn AI Into a Learning Partner</h3>
+                    
+                    <div style="background: #5b9bd5; color: white; padding: 15px; border-radius: 6px; margin: 15px 0; text-align: center;">
+                        <h4 style="color: white; margin-bottom: 15px;">Student View - Skills Comparison</h4>
+                    </div>
+                    
+                    <div style="background: white; border: 2px solid #e1e5e9; border-radius: 8px; padding: 25px;">
+                        <h4 style="color: #4a90c2; margin-bottom: 15px; text-align: center;">Students discover the unique value of peer insights vs. AI</h4>
+                        
+                        <div style="background: #e8f4fd; padding: 15px; border-radius: 6px; margin: 15px 0;">
+                            <p><strong>Students at the University of Pennsylvania's Wharton School noted:</strong> Classmate linked the course concepts to their jobs and offered practical advice, while ChatGPT offered systematic, HR-style guidance with compelling structure. Students found both perspectives valuable.</p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+                            <div style="background: #e3f2fd; padding: 15px; border-radius: 6px;">
+                                <h4 style="color: #1976d2; margin-bottom: 8px; text-align: center;">Direct Skills Comparison</h4>
+                                <p><strong>Students are pitted against ChatGPT: Both complete identical tasks.</strong></p>
+                            </div>
+                            <div style="background: #fff3e0; padding: 15px; border-radius: 6px;">
+                                <h4 style="color: #f57c00; margin-bottom: 8px; text-align: center;">Career Preparation</h4>
+                                <p><strong>Rivalry with AI will play out in students' careers. Students learn where they need to "Up their game" to compete with AI.</strong></p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 6px; text-align: center;">
+                            <strong>Student Realization:</strong> <em>"I can see exactly where my feedback is stronger and where ChatGPT beats me. I thought I was being helpful, but I see that ChatGPT nailed the data analysis, while my comments there were pretty general."</em>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #e8f4fd; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                        <p style="color: #4a90c2; font-weight: 600; margin: 0;"><strong>Career Skill Development:</strong> This direct comparison between a student's feedback and ChatGPT's feedback is optional. If you choose it, it's pre-prompted, and automatically generates for any assignment.</p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <p style="color: #4a90c2; font-weight: 600;">We include ChatGPT via API, ensuring data privacy.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page 6: Complete Solution -->
+            <div class="step">
+                <div class="problem-solution-container">
+                    <div class="problem-box-large">
+                        <h3>I don't have time to re-work assignments</h3>
+                        <p><strong>Will my current assignments work?</strong></p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="solution-box-large">
+                        <h3>Yes, Use Your Existing Assignments</h3>
+                        <p>Use any individual or team assignment. Settings can be in classrooms, online, blended, synchronous or asynchronous. Setup is easy, our default settings save you time.</p>
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fb; border-radius: 12px; padding: 30px; margin: 30px 0;">
+                    <h3 style="color: #4a90c2; text-align: center; margin-bottom: 20px;">⚡ We Accelerate Learning</h3>
+                    <p style="text-align: center; margin-bottom: 25px;">Using your existing assignments -- we accelerate learning by adding peer learning, AI enhancements and oral verification. Feedback and grading are automated and available immediately.</p>
+
+                    <h4 style="color: #4a90c2; text-align: center; margin-bottom: 20px;">Result: Overcome all 5 teaching headaches...</h4>
+
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <h4>✅ AI-Proof Assessment</h4>
+                            <p>Immediate oral responses ensure authentic student understanding</p>
+                        </div>
+                        <div class="summary-item">
+                            <h4>✅ Zero Time Spent on Grading</h4>
+                            <p>Both are automated, according to your standards</p>
+                        </div>
+                        <div class="summary-item">
+                            <h4>✅ Peer Review that works</h4>
+                            <p>Patented for fair evaluation; assumes participation may be uneven</p>
+                        </div>
+                        <div class="summary-item">
+                            <h4>✅ GenAI Career Insights</h4>
+                            <p>Options are pre-prompted and built-in</p>
+                        </div>
+                        <div class="summary-item">
+                            <h4>✅ Use Your Assignments</h4>
+                            <p>No need to develop new ones</p>
+                        </div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #4a90c2 0%, #357abd 100%); color: white; padding: 25px; border-radius: 8px; text-align: center; margin-top: 20px;">
+                        Enhanced learning for students. Time savings for instructors.
+                    </div>
+
+                    <div class="cta-section">
+                        <p style="margin-bottom: 20px;">Join instructors worldwide who have eliminated their biggest teaching frustrations.</p>
+                        <h4 style="margin-bottom: 15px;">Next Steps:</h4>
+                        <div class="cta-buttons">
+                            <button class="cta-btn" onclick="alert('Redirecting to interactive demo...')">Try Interactive Demo</button>
+                            <button class="cta-btn" onclick="alert('Scheduling instructor consultation...')">Schedule Consultation</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
