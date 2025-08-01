@@ -127,7 +127,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #ddd;
         }
         
         .btn {
@@ -387,87 +386,6 @@
     </style>
 </head>
 <body>
-    <div class="demo-container">
-        <div class="header">
-            <h1>Peer Exchange</h1>
-            <p>A patented system to address current teaching headaches</p>
-        </div>
-        
-        <div class="navigation">
-            <button class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" disabled>← Previous</button>
-            <div class="dots">
-                <div class="dot active" onclick="goToPage(0)"></div>
-                <div class="dot" onclick="goToPage(1)"></div>
-                <div class="dot" onclick="goToPage(2)"></div>
-                <div class="dot" onclick="goToPage(3)"></div>
-                <div class="dot" onclick="goToPage(4)"></div>
-                <div class="dot" onclick="goToPage(5)"></div>
-            </div>
-            <button class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">Next →</button>
-        </div>
-    </div>
-
-    <script>
-        let currentStep = 0;
-        const totalSteps = 6;
-        
-        function updateDisplay() {
-            // Hide all steps
-            document.querySelectorAll('.step').forEach(step => {
-                step.classList.remove('active');
-            });
-            
-            // Show current step
-            document.querySelectorAll('.step')[currentStep].classList.add('active');
-            
-            // Show/hide header banner (only on pages 1 and 6)
-            const header = document.querySelector('.header');
-            if (currentStep === 0 || currentStep === 5) {
-                header.classList.add('show');
-            } else {
-                header.classList.remove('show');
-            }
-            
-            // Update navigation buttons
-            document.getElementById('prevBtn').disabled = currentStep === 0;
-            document.getElementById('nextBtn').disabled = currentStep === totalSteps - 1;
-            
-            if (currentStep === totalSteps - 1) {
-                document.getElementById('nextBtn').textContent = 'Restart →';
-                document.getElementById('nextBtn').disabled = false;
-            } else {
-                document.getElementById('nextBtn').textContent = 'Next →';
-            }
-            
-            // Update step indicators
-            document.querySelectorAll('.dot').forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentStep);
-            });
-        }
-        
-        function changeStep(direction) {
-            if (currentStep === totalSteps - 1 && direction === 1) {
-                // Restart demo
-                currentStep = 0;
-            } else {
-                currentStep += direction;
-                if (currentStep < 0) currentStep = 0;
-                if (currentStep >= totalSteps) currentStep = totalSteps - 1;
-            }
-            updateDisplay();
-        }
-        
-        function goToPage(page) {
-            currentStep = page;
-            updateDisplay();
-        }
-        
-        // Initialize
-        updateDisplay();
-    </script>
-</body>
-</html>
-        
         <div class="content">
             <!-- Page 1 -->
             <div class="step active">
@@ -766,3 +684,79 @@
                 </div>
             </div>
         </div>
+    <div class="demo-container">
+        <div class="navigation">
+            <button class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" disabled>← Previous</button>
+            <div class="dots">
+                <div class="dot active" onclick="goToPage(0)"></div>
+                <div class="dot" onclick="goToPage(1)"></div>
+                <div class="dot" onclick="goToPage(2)"></div>
+                <div class="dot" onclick="goToPage(3)"></div>
+                <div class="dot" onclick="goToPage(4)"></div>
+                <div class="dot" onclick="goToPage(5)"></div>
+            </div>
+            <button class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 6;
+        
+        function updateDisplay() {
+            // Hide all steps
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Show current step
+            document.querySelectorAll('.step')[currentStep].classList.add('active');
+            
+            // Show/hide header banner (only on pages 1 and 6)
+            const header = document.querySelector('.header');
+            if (currentStep === 0 || currentStep === 5) {
+                header.classList.add('show');
+            } else {
+                header.classList.remove('show');
+            }
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentStep === 0;
+            document.getElementById('nextBtn').disabled = currentStep === totalSteps - 1;
+            
+            if (currentStep === totalSteps - 1) {
+                document.getElementById('nextBtn').textContent = 'Restart →';
+                document.getElementById('nextBtn').disabled = false;
+            } else {
+                document.getElementById('nextBtn').textContent = 'Next →';
+            }
+            
+            // Update step indicators
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentStep);
+            });
+        }
+        
+        function changeStep(direction) {
+            if (currentStep === totalSteps - 1 && direction === 1) {
+                // Restart demo
+                currentStep = 0;
+            } else {
+                currentStep += direction;
+                if (currentStep < 0) currentStep = 0;
+                if (currentStep >= totalSteps) currentStep = totalSteps - 1;
+            }
+            updateDisplay();
+        }
+        
+        function goToPage(page) {
+            currentStep = page;
+            updateDisplay();
+        }
+        
+        // Initialize
+        updateDisplay();
+    </script>
+        
+</body>
+</html>
