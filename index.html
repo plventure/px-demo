@@ -386,6 +386,12 @@
     </style>
 </head>
 <body>
+    <div class="demo-container">
+      <div class="header">
+        <h1>Peer Exchange</h1>
+        <p>A patented system to address current teaching headaches</p>
+      </div>
+    </div>
         <div class="content">
             <!-- Page 1 -->
             <div class="step active">
@@ -704,6 +710,12 @@
             // Show current step
             document.querySelectorAll('.step')[currentStep].classList.add('active');
             
+            const header = document.querySelector(".header"); 
+            if (currentStep === 0 || currentStep === 5) {
+              header.classList.add('show'); 
+            } else {
+              header.classList.remove('show'); 
+            }
             // Update navigation buttons
             document.getElementById('prevBtn').disabled = currentStep === 0;
             document.getElementById('nextBtn').disabled = currentStep === totalSteps - 1;
