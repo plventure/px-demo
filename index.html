@@ -673,14 +673,6 @@
                         Enhanced learning for students. Time savings for instructors.
                     </div>
 
-                    <div class="cta-section">
-                        <p style="margin-bottom: 20px;">Join instructors worldwide who have eliminated their biggest teaching frustrations.</p>
-                        <h4 style="margin-bottom: 15px;">Next Steps:</h4>
-                        <div class="cta-buttons">
-                            <button class="cta-btn" onclick="alert('Redirecting to interactive demo...')">Try Interactive Demo</button>
-                            <button class="cta-btn" onclick="alert('Scheduling instructor consultation...')">Schedule Consultation</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -712,14 +704,6 @@
             // Show current step
             document.querySelectorAll('.step')[currentStep].classList.add('active');
             
-            // Show/hide header banner (only on pages 1 and 6)
-            const header = document.querySelector('.header');
-            if (currentStep === 0 || currentStep === 5) {
-                header.classList.add('show');
-            } else {
-                header.classList.remove('show');
-            }
-            
             // Update navigation buttons
             document.getElementById('prevBtn').disabled = currentStep === 0;
             document.getElementById('nextBtn').disabled = currentStep === totalSteps - 1;
@@ -733,7 +717,11 @@
             
             // Update step indicators
             document.querySelectorAll('.dot').forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentStep);
+                if (index === currentStep) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
             });
         }
         
